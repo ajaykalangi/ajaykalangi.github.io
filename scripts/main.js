@@ -70,5 +70,6 @@ $().ready(async function () {
     let storeObjs = await fetchStoreObjects();
     console.log(storeObjs);
     updateStoreListTable(storeObjs);
+    console.log('done calling updateStoreTable');
     showStores();
 });
