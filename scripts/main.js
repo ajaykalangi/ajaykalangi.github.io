@@ -21,11 +21,6 @@ function showAvailability() {
     $(".store-availability").show();
 }
 
-function cleanSlate() {
-    $(".stores-list").hide();
-    $(".store-availability").hide();
-}
-
 function updateStoreListTable(storeObjs) {
     console.log("updateStoreListTable(): " + storeObjs.length);
     let storeListTable = "<h2>Stores</h2>";
@@ -70,7 +65,6 @@ async function fetchStoreObjects() {
 }
 
 $().ready(async function () {
-    cleanSlate();
     await showCurrentTime();
 
     let storeObjs = await fetchStoreObjects();
