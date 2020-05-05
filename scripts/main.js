@@ -68,6 +68,7 @@ $().ready(async function () {
     await showCurrentTime();
 
     let storeObjs = await fetchStoreObjects();
+    console.log(storeObjs);
     updateStoreListTable(storeObjs);
     showStores();
 });
