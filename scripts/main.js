@@ -30,22 +30,27 @@ function updateStoreListTable(storeObjs) {
         storeListTable += `
             <table>
                 <tr>
-                    <th>Store</th>
-                    <th>Address</th>
-                    <th>Reserve (button)</th>
+                    <th scope="col">Store</th>
+                    <th scope="col">Address</th>
+                    <th scope="col">Availability</th>
                 </tr>`;
         $.each(storeObjs, function (idx, obj) {
             storeListTable += `
                 <tr>
-                    <td>${obj.name}</td>
+                    <td scope="row">${obj.name}</td>
                     <td>${obj.address}</td>
-                    <td>Reserve (button)</th>
+                    <td><button 
+                            type="button" 
+                            class="btn-availability" 
+                            data-store-id=${obj.id} 
+                            onclick=fetchAvailability(${obj.id})
+                        >Check Availability</button></th>
                 </tr>`;
         });
         storeListTable += "</table>"
     }
 
-    console.log("storeListTableHtml: " + storeListTable);
+    // console.log("storeListTableHtml: " + storeListTable);
     $(".stores-list").html(storeListTable);
 }
 
@@ -53,8 +58,19 @@ async function fetchStoreObjects() {
     // TODO: Fetch objects instead of reading from a file
 
     $.getJSON(
-        "https://my-json-server.typicode.com/ajaykalangi/ajaykalangi.github.io/stores", 
+        "https://my-json-server.typicode.com/ajaykalangi/ajaykalangi.github.io/stores",
         updateStoreListTable);
+}
+
+function updateAvailabilityTable(availabilityObj) {
+    console.log(availabilityObj);
+}
+
+async function fetchAvailability(storeId) {
+    console.log("fetchAvailability: " + storeId);
+    $.getJSON(
+        "https://my-json-server.typicode.com/ajaykalangi/ajaykalangi.github.io/availability",
+        updateAvailabilityTable);
 }
 
 $().ready(async function () {

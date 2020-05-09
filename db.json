@@ -13,6 +13,8 @@
     ],
     "availability": {
         "storeId": "123",
+        "storeName": "Target",
+        "storeAddress": "Sand City, CA",
         "capacity": "20",
         "openHours": "every day 9AM - 9PM",
         "slots": [
