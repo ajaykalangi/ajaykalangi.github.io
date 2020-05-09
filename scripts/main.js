@@ -51,25 +51,14 @@ function updateStoreListTable(storeObjs) {
 
 async function fetchStoreObjects() {
     // TODO: Fetch objects instead of reading from a file
-    let data = `[
-        {
-            "name": "Target",
-            "address": "Sand City, CA"
-        },
-        {
-            "name": "Safeway",
-            "address": "Seaside, CA"
-        }
-    ]`;
-    return JSON.parse(data);
+
+    $.getJSON(
+        "https://my-json-server.typicode.com/ajaykalangi/ajaykalangi.github.io/stores", 
+        updateStoreListTable);
 }
 
 $().ready(async function () {
     await showCurrentTime();
-
-    let storeObjs = await fetchStoreObjects();
-    console.log(storeObjs);
-    updateStoreListTable(storeObjs);
-    console.log('done calling updateStoreTable');
+    await fetchStoreObjects();
     showStores();
 });
