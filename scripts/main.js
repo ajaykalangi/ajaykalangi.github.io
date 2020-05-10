@@ -43,14 +43,13 @@ function updateStoreListTable(storeObjs) {
                             type="button" 
                             class="btn-availability" 
                             data-store-id=${obj.id} 
-                            onclick=fetchAvailability(${obj.id})
                         >Check Availability</button></td>
                 </tr>`;
         });
         storeListTable += "</table>"
     }
 
-    console.log(storeListTable);
+    // console.log(storeListTable);
     $(".stores-list").html(storeListTable);
     showStores();
 }
@@ -63,21 +62,26 @@ async function fetchStoreObjects() {
         updateStoreListTable);
 }
 
+function toDateStr(epoch) {
+    epoch_ms = 1000 * parseInt(epoch);
+    let date = new Date(epoch_ms);
+    return date.toString();
+    // return `${date.getHours()}:${date.getMinutes()} on ${date.getDay()}, ${date.getMonth()}/${date.getDate()}`;
+}
+
 function updateAvailabilityTable(availabilityObj) {
     console.log(availabilityObj);
     let availabilityTable = `
-        <h2>Availability</h2>
-        <h4>${availabilityObj.storeName}, ${availabilityObj.storeAddress}</h4>
-    `;
+        <h2>Availability for ${availabilityObj.storeName}, ${availabilityObj.storeAddress}</h2>`;
 
     let availableSlots = "";
-    $.each(availabilityObj.slots, function(idx, obj) {
+    $.each(availabilityObj.slots, function (idx, obj) {
         let areSlotsAvailable = parseInt(obj.slotAvailable) > 0;
         console.log(obj + " " + areSlotsAvailable);
         if (areSlotsAvailable) {
             availableSlots += `
                 <tr>
-                    <td scope="row">${obj.slotStart} - ${obj.slotEnd}</td>
+                    <td scope="row">${toDateStr(obj.slotStart)}</td>
                     <td>${obj.slotAvailable}</td>
                     <td><button
                         type="button" 
@@ -85,7 +89,6 @@ function updateAvailabilityTable(availabilityObj) {
                         data-store-id=${availabilityObj.storeId}
                         data-start-time=${obj.slotStart}
                         data-end-time=${obj.slotEnd}
-                        onclick=reserve(${availabilityObj.storeId})                   
                     >Reserve</button></td>
                 </tr>`;
         }
@@ -105,8 +108,10 @@ function updateAvailabilityTable(availabilityObj) {
     } else {
         availabiliytTable += "<p>No available slots at this store!</p>";
     }
+    availabilityTable +=
+        `<button type="button" class="btn-show-stores">Other Stores</button>`;
 
-    console.log(availabilityTable);
+    // console.log(availabilityTable);
     $(".store-availability").html(availabilityTable);
     showAvailability();
 }
@@ -118,11 +123,23 @@ async function fetchAvailability(storeId) {
         updateAvailabilityTable);
 }
 
-// function reserve(storeId, startTime, endTime) {
-    // console.log("reserve: " + storeId + ": " + startTime + " - " + endTime);
-function reserve(storeId) {
-    console.log("reserve: " + storeId);
-}
+$(document).on("click", ".btn-availability", async function () {
+    console.log("availability btn callback called");
+    await fetchAvailability(this.dataset.storeId);
+});
+
+$(document).on("click", ".btn-reserve", function () {
+    console.log("reserve btn callback called");
+    let reservation = "You have reserved a slot at " +
+        this.dataset.storeId + " at " + toDateStr(this.dataset.startTime);
+    alert(reservation);
+    showStores();
+});
+
+$(document).on("click", ".btn-show-stores", function () {
+    console.log("show stores btn callback called");
+    showStores();
+});
 
 $().ready(async function () {
     await showCurrentTime();
