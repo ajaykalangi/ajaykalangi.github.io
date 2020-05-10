@@ -50,7 +50,7 @@ function updateStoreListTable(storeObjs) {
         storeListTable += "</table>"
     }
 
-    // console.log("storeListTableHtml: " + storeListTable);
+    console.log(storeListTable);
     $(".stores-list").html(storeListTable);
     showStores();
 }
@@ -82,16 +82,12 @@ function updateAvailabilityTable(availabilityObj) {
                     <td><button
                         type="button" 
                         class="btn-reserve" 
-                        data-store-id=${availabilityTable.storeId}
+                        data-store-id=${availabilityObj.storeId}
                         data-start-time=${obj.slotStart}
                         data-end-time=${obj.slotEnd}
-                        onclick=reserve(
-                            ${availabilityTable.storeId}, 
-                            ${obj.slotStart},
-                            ${obj.slotEnd});
+                        onclick=reserve(${availabilityObj.storeId})                   
                     >Reserve</button></td>
-                </tr>
-            `;
+                </tr>`;
         }
     });
 
@@ -110,6 +106,7 @@ function updateAvailabilityTable(availabilityObj) {
         availabiliytTable += "<p>No available slots at this store!</p>";
     }
 
+    console.log(availabilityTable);
     $(".store-availability").html(availabilityTable);
     showAvailability();
 }
@@ -121,8 +118,10 @@ async function fetchAvailability(storeId) {
         updateAvailabilityTable);
 }
 
-async function reserve(storeId, startTime, endTime) {
-    console.log("reserve: " + storeId + ": " + startTime + " - " + endTime);
+// function reserve(storeId, startTime, endTime) {
+    // console.log("reserve: " + storeId + ": " + startTime + " - " + endTime);
+function reserve(storeId) {
+    console.log("reserve: " + storeId);
 }
 
 $().ready(async function () {
