@@ -44,7 +44,7 @@ function updateStoreListTable(storeObjs) {
                             class="btn-availability" 
                             data-store-id=${obj.id} 
                             onclick=fetchAvailability(${obj.id})
-                        >Check Availability</button></th>
+                        >Check Availability</button></td>
                 </tr>`;
         });
         storeListTable += "</table>"
@@ -52,6 +52,7 @@ function updateStoreListTable(storeObjs) {
 
     // console.log("storeListTableHtml: " + storeListTable);
     $(".stores-list").html(storeListTable);
+    showStores();
 }
 
 async function fetchStoreObjects() {
@@ -64,6 +65,53 @@ async function fetchStoreObjects() {
 
 function updateAvailabilityTable(availabilityObj) {
     console.log(availabilityObj);
+    let availabilityTable = `
+        <h2>Availability</h2>
+        <h4>${availabilityObj.storeName}, ${availabilityObj.storeAddress}</h4>
+    `;
+
+    let availableSlots = "";
+    $.each(availabilityObj.slots, function(idx, obj) {
+        let areSlotsAvailable = parseInt(obj.slotAvailable) > 0;
+        console.log(obj + " " + areSlotsAvailable);
+        if (areSlotsAvailable) {
+            availableSlots += `
+                <tr>
+                    <td scope="row">${obj.slotStart} - ${obj.slotEnd}</td>
+                    <td>${obj.slotAvailable}</td>
+                    <td><button
+                        type="button" 
+                        class="btn-reserve" 
+                        data-store-id=${availabilityTable.storeId}
+                        data-start-time=${obj.slotStart}
+                        data-end-time=${obj.slotEnd}
+                        onclick=reserve(
+                            ${availabilityTable.storeId}, 
+                            ${obj.slotStart},
+                            ${obj.slotEnd});
+                    >Reserve</button></td>
+                </tr>
+            `;
+        }
+    });
+
+    if (availableSlots.length > 0) {
+        availabilityTable += `
+            <table>
+                <tr>
+                    <th scope="col">Time</th>
+                    <th scope="col">Available Slots</th>
+                    <th scope="col">Reserve</th>
+                </tr>
+                ${availableSlots}   
+            </table>
+        `;
+    } else {
+        availabiliytTable += "<p>No available slots at this store!</p>";
+    }
+
+    $(".store-availability").html(availabilityTable);
+    showAvailability();
 }
 
 async function fetchAvailability(storeId) {
@@ -73,8 +121,11 @@ async function fetchAvailability(storeId) {
         updateAvailabilityTable);
 }
 
+async function reserve(storeId, startTime, endTime) {
+    console.log("reserve: " + storeId + ": " + startTime + " - " + endTime);
+}
+
 $().ready(async function () {
     await showCurrentTime();
     await fetchStoreObjects();
-    showStores();
 });
